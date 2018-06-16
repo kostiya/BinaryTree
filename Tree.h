@@ -19,11 +19,12 @@ namespace structure{
         Node right;
         T key;
     public:
-        enum Location{left, right};
+        enum Location{leftNode, rightNode};
         explicit class_node(T key,Node p= nullptr,Node left= nullptr,
                 Node right= nullptr);
         class_node()=delete;
         class_node(class_node node) = default;
+        ~class_node();
         Node getParent() const;
         Node getLeft() const;
         Node getRight() const;
