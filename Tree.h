@@ -31,22 +31,22 @@ namespace structure{
         T getKey() const;
         Node insert(T key);
         bool remove(T key);
-        Node find(T key) const;
-        Node minimum(T key) const;
-        Node maximum(T key) const;
-        Node succsessor(T key) const;
-        Node predecessor(T key) const;
+        Node find(T key);
+        Node minimum();
+        Node maximum();
+        Node succsessor();
+        Node predecessor();
+        bool rotateRight();
+        bool rotateLeft();
     };
 
     void printNode(Node node, int depth=0){
         if(node == nullptr)
             return;
+        printNode(node->getLeft() , ++depth);
         for(int i = 0; i < depth*4;i++)
             cout << " ";
         cout << node->getKey() << endl;
-        printNode(node->getLeft() , ++depth);
-        for(int i = 0; i < depth*4+10;i++)
-            cout << "-";
         printNode(node->getRight(), ++depth);
     }
 }

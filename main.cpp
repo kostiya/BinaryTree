@@ -2,7 +2,7 @@
 using std::cout;
 using std::endl;
 
-void printNum(const int&& num){
+void printNum(const int num){
     cout << num << endl;
 }
 
