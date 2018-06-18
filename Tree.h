@@ -28,10 +28,10 @@ namespace structure{
         Node getParent() const;
         Node getLeft() const;
         Node getRight() const;
-        T getKey() const;
-        Node insert(T key);
-        bool remove(T key);
-        Node find(T key);
+        T& getKey() const;
+        Node insert(T& key);
+        bool remove(T& key);
+        Node find(T& key);
         Node minimum();
         Node maximum();
         Node succsessor();

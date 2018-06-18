@@ -1,8 +1,17 @@
 #include "Tree.h"
+#include <random>
+#include <iostream>
+#include <functional>
 
 namespace structure{
+    std::default_random_engine generator;
+    std::uniform_int_distribution<int> distribution(0,1);
+    auto sideGenerator = std::bind(distribution,generator);
     class_node::class_node(T key,Node p= nullptr,Node left= nullptr,
-            Node right= nullptr):key(key),p(p),left(left),right(right){}
+            Node right= nullptr):key(key),
+                                  p(p),
+                                  left(left),
+                                  right(right){}
     class_node::~class_node() {
 
     }
@@ -15,10 +24,10 @@ namespace structure{
     Node class_node::getRight() const{
         return this->right;
     }
-    T class_node::getKey() const{
+    T& class_node::getKey() const{
         return this->key;
     }
-    Node class_node::insert(T key){
+    Node class_node::insert(T& key){
         Node current_node = this;
         Node previous_node = nullptr;
         Location side;
@@ -43,10 +52,10 @@ namespace structure{
             return previous_node->left;
         }
     }
-    bool class_node::remove(T key){
-
+    bool class_node::remove(T& key){
+        
     }
-    Node class_node::find(T key){
+    Node class_node::find(T& key){
         Node current_node = this;
         while (current_node != nullptr){
             if(key==this->key)
@@ -74,24 +83,24 @@ namespace structure{
     Node class_node::succsessor(){
         if(right != nullptr)
             return right->minimum();
-        Node x = this;
-        Node y = this->p;
-        while(y != nullptr && x== y->right){
-            x = y;
-            y = y->p;
+        Node current = this;
+        Node parent = this->p;
+        while(parent != nullptr && current== parent->right){
+            current = parent;
+            parent = parent->p;
         }
-        return y;
+        return parent;
     }
     Node class_node::predecessor(){
         if(left != nullptr)
             return left->maximum();
-        Node x = this;
-        Node y = this->p;
-        while(y != nullptr && x== y->left){
-            x = y;
-            y = y->p;
+        Node current = this;
+        Node parent = this->p;
+        while(parent != nullptr && current== parent->left){
+            current = parent;
+            parent = parent->p;
         }
-        return y;
+        return parent;
     }
 
     bool class_node::rotateRight(){
