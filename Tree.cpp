@@ -11,7 +11,7 @@ namespace structure{
                                      right(right){}
 
     BinaryTree::BinaryTree():generator(),
-                                      distribution(0,1){
+                             distribution(0,1){
         root = nullptr;
     }
     BinaryTree::BinaryTree(T& key){
@@ -26,6 +26,33 @@ namespace structure{
         this->destroyTree(node->right);
         delete node;
     }
+
+    void BinaryTree::popNode(Node node, Location side) {
+
+        Node sibling;
+        if(side == leftNode)
+            sibling = node->left;
+        else
+            sibling = node->right;
+
+        sibling->p = node->p;
+        if(node->p->left == node)
+            node->p->left = sibling;
+        else
+            node->p->right = sibling;
+
+    }
+
+    void BinaryTree::overideNode(Node oldNode, Node newNode){
+        newNode->left = oldNode->left;
+        newNode->right = oldNode->right;
+        newNode->p = oldNode->p;
+        if(oldNode->p->left == oldNode)
+            oldNode->p->left = newNode;
+        else
+            oldNode->p->right = newNode;
+    }
+
     BinaryTree::~BinaryTree() {
         destroyTree(this->getRoot());
     }
@@ -51,7 +78,7 @@ namespace structure{
             return this->getRoot();
         }
         Node current_node = this->getRoot();
-        Node previous_node = nullptr;
+        Node previous_node = current_node;
         Location side = rightNode;
         while (current_node != nullptr){
             if(key==current_node->key)
@@ -79,6 +106,52 @@ namespace structure{
         if(node == nullptr)
             return false;
 
+        if(node->left== nullptr){
+            this->popNode(node,rightNode);
+            delete node;
+            return true;
+        }
+        if(node->right== nullptr){
+            this->popNode(node,leftNode);
+            delete node;
+            return true;
+        }
+
+        Node newNode;
+        Location side;
+
+        if(distribution(generator)==0){
+            newNode = node->left->maximum();
+            side = leftNode;
+        }
+        else{
+            newNode = node->right->minimum();
+            side = rightNode;
+        }
+
+        if(newNode == node->left){
+            this->popNode(node,leftNode);
+            newNode->right = node->right;
+            delete node;
+            return true;
+        }
+
+        if(newNode == node->right){
+            this->popNode(node,rightNode);
+            newNode->left = node->left;
+            delete node;
+            return true;
+        }
+
+        if(side==rightNode)
+            popNode(newNode,rightNode);
+        else
+            popNode(newNode,leftNode);
+
+        overideNode(node,newNode);
+        delete node;
+
+        return true;
 
     }
     Node BinaryTree::find(T& key){
@@ -138,7 +211,7 @@ namespace structure{
     bool node::rotateRight(){
 
     }
-    bool node::rotateKLeft(){
+    bool node::rotateLeft(){
 
     }
 }

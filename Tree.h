@@ -41,10 +41,11 @@ namespace structure{
     protected:
         Node root;
         void destroyTree(Node node);
+        void popNode(Node node, Location side);
+        void overideNode(Node oldNode, Node newNode);
         std::default_random_engine generator;
         std::uniform_int_distribution<int> distribution;
     public:
-        enum Location{leftNode, rightNode};
         explicit BinaryTree();
         explicit BinaryTree(T& key);
         ~BinaryTree();
