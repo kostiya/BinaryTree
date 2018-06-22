@@ -75,7 +75,11 @@ namespace structure{
         }
     }
     bool BinaryTree::remove(T& key){
-        
+        Node node = this->find(key);
+        if(node == nullptr)
+            return false;
+
+
     }
     Node BinaryTree::find(T& key){
         Node current_node = this->getRoot();
@@ -134,7 +138,7 @@ namespace structure{
     bool node::rotateRight(){
 
     }
-    bool node::rotateLeft(){
+    bool node::rotateKLeft(){
 
     }
 }

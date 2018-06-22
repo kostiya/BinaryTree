@@ -3,4 +3,4 @@ project(BinaryTree)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(BinaryTree main.cpp tree.cpp)
+add_executable(BinaryTree TreeTest.cpp tree.cpp)
