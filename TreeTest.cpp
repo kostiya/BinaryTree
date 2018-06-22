@@ -1,14 +1,28 @@
 #include <iostream>
 #include <random>
 #include <functional>
+#include "Tree.h"
 using std::cout;
 using std::endl;
+using structure::node;
+using structure::BinaryTree;
+using structure::printNode;
 
 int main() {
-    std::default_random_engine generator;
-    std::uniform_int_distribution<int> distribution(0,1);
-    auto sideGenerator = std::bind(distribution,generator);
-    for(int i = 0;i<1000;i++)
-        cout << sideGenerator() << " ";
+    int num;
+    BinaryTree tree1;
+    num = 3;
+    tree1.insert(num);
+    num = 1;
+    tree1.insert(num);
+    num = 2;
+    tree1.insert(num);
+    num = 4;
+    tree1.insert(num);
+    num = 5;
+    tree1.insert(num);
+    num = 3;
+    tree1.remove(num);
+    printNode(tree1.getRoot());
     return 0;
 }

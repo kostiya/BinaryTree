@@ -57,15 +57,7 @@ namespace structure{
         Node maximum();
     };
 
-    void printNode(Node node, int depth=0){
-        if(node == nullptr)
-            return;
-        printNode(node->getLeft() , ++depth);
-        for(int i = 0; i < depth*4;i++)
-            cout << " ";
-        cout << node->getKey() << endl;
-        printNode(node->getRight(), ++depth);
-    }
+    void printNode(Node node, int depth=0);
 }
 
 #endif //BINARYTREE_TREE_H

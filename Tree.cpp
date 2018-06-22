@@ -214,4 +214,14 @@ namespace structure{
     bool node::rotateLeft(){
 
     }
+
+    void printNode(Node node, int depth){
+        if(node == nullptr)
+            return;
+        printNode(node->getLeft() , ++depth);
+        for(int i = 0; i < depth*4;i++)
+            cout << " ";
+        cout << node->getKey() << endl;
+        printNode(node->getRight(), ++depth);
+    }
 }
