@@ -27,23 +27,26 @@ namespace structure{
         delete node;
     }
 
-    void BinaryTree::popNode(Node node, Location side) {
-
+    void BinaryTree::popNode(Node node) {
         Node sibling;
-        if(side == leftNode)
-            sibling = node->left;
-        else
+        if(node->left == nullptr)
             sibling = node->right;
+        else
+            sibling = node->left;
 
-        sibling->p = node->p;
         if(node->p->left == node)
             node->p->left = sibling;
         else
             node->p->right = sibling;
 
+        if(sibling != nullptr)
+            sibling->p = node->p;
+
     }
 
-    void BinaryTree::overideNode(Node oldNode, Node newNode){
+    void BinaryTree::overrideNode(Node oldNode, Node newNode){
+        if(newNode == nullptr || oldNode == nullptr)
+            return;
         newNode->left = oldNode->left;
         newNode->right = oldNode->right;
         newNode->p = oldNode->p;
@@ -106,51 +109,22 @@ namespace structure{
         if(node == nullptr)
             return false;
 
-        if(node->left== nullptr){
-            this->popNode(node,rightNode);
-            delete node;
-            return true;
-        }
-        if(node->right== nullptr){
-            this->popNode(node,leftNode);
+        if(node->left== nullptr || node->right == nullptr){
+            this->popNode(node);
             delete node;
             return true;
         }
 
         Node newNode;
-        Location side;
 
-        if(distribution(generator)==0){
+        if(distribution(generator)==0)
             newNode = node->left->maximum();
-            side = leftNode;
-        }
-        else{
-            newNode = node->right->minimum();
-            side = rightNode;
-        }
-
-        if(newNode == node->left){
-            this->popNode(node,leftNode);
-            newNode->right = node->right;
-            delete node;
-            return true;
-        }
-
-        if(newNode == node->right){
-            this->popNode(node,rightNode);
-            newNode->left = node->left;
-            delete node;
-            return true;
-        }
-
-        if(side==rightNode)
-            popNode(newNode,rightNode);
         else
-            popNode(newNode,leftNode);
+            newNode = node->right->minimum();
 
-        overideNode(node,newNode);
+        popNode(newNode);
+        overrideNode(node,newNode);
         delete node;
-
         return true;
 
     }
