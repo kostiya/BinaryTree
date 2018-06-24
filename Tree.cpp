@@ -14,8 +14,7 @@ namespace structure{
                              distribution(0,1){
         root = nullptr;
     }
-    BinaryTree::BinaryTree(T& key){
-        root = nullptr;
+    BinaryTree::BinaryTree(T& key):BinaryTree(){
         this->insert(key);
     }
 
@@ -34,10 +33,12 @@ namespace structure{
         else
             sibling = node->left;
 
-        if(node->p->left == node)
-            node->p->left = sibling;
-        else
-            node->p->right = sibling;
+        if(node->p != nullptr) {
+            if (node->p->left == node)
+                node->p->left = sibling;
+            else
+                node->p->right = sibling;
+        }
 
         if(sibling != nullptr)
             sibling->p = node->p;
@@ -50,10 +51,12 @@ namespace structure{
         newNode->left = oldNode->left;
         newNode->right = oldNode->right;
         newNode->p = oldNode->p;
-        if(oldNode->p->left == oldNode)
-            oldNode->p->left = newNode;
-        else
-            oldNode->p->right = newNode;
+        if(oldNode->p != nullptr) {
+            if (oldNode->p->left == oldNode)
+                oldNode->p->left = newNode;
+            else
+                oldNode->p->right = newNode;
+        }
     }
 
     BinaryTree::~BinaryTree() {
@@ -124,6 +127,8 @@ namespace structure{
 
         popNode(newNode);
         overrideNode(node,newNode);
+        if(root==node)
+            root = newNode;
         delete node;
         return true;
 
@@ -192,10 +197,12 @@ namespace structure{
     void printNode(Node node, int depth){
         if(node == nullptr)
             return;
-        printNode(node->getLeft() , ++depth);
+        printNode(node->getLeft() ,depth+1);
         for(int i = 0; i < depth*4;i++)
             cout << " ";
         cout << node->getKey() << endl;
-        printNode(node->getRight(), ++depth);
+        printNode(node->getRight(),depth+1);
+        if(depth==0)
+            cout << "--------------------" << endl;
     }
 }
