@@ -10,7 +10,8 @@ namespace structure{
                                      left(left),
                                      right(right){}
 
-    BinaryTree::BinaryTree():generator(),
+    BinaryTree::BinaryTree():rd(),
+                             generator(rd()),
                              distribution(0,1){
         root = nullptr;
     }
@@ -30,8 +31,10 @@ namespace structure{
         Node sibling;
         if(node->left == nullptr)
             sibling = node->right;
-        else
+        else if(node->right == nullptr)
             sibling = node->left;
+        else
+            return;
 
         if(node->p != nullptr) {
             if (node->p->left == node)
@@ -57,6 +60,10 @@ namespace structure{
             else
                 oldNode->p->right = newNode;
         }
+        if(oldNode->right != nullptr)
+            oldNode->right->p = newNode;
+        if(oldNode->left != nullptr)
+            oldNode->left->p = newNode;
     }
 
     BinaryTree::~BinaryTree() {
@@ -112,7 +119,17 @@ namespace structure{
         if(node == nullptr)
             return false;
 
-        if(node->left== nullptr || node->right == nullptr){
+        if(node->left== nullptr){
+            if(node==root)
+                root = node->right;
+            this->popNode(node);
+            delete node;
+            return true;
+        }
+
+        if(node->right == nullptr){
+            if(node==root)
+                root = node->left;
             this->popNode(node);
             delete node;
             return true;

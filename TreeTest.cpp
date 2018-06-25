@@ -29,5 +29,11 @@ int main() {
     num = 4;
     tree1.remove(num);
     printNode(tree1.getRoot());
+    node * node = tree1.minimum();
+    while(node != nullptr){
+        cout << node->getKey() << " ";
+        node = node->succsessor();
+    }
+    cout << endl;
     return 0;
 }

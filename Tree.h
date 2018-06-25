@@ -43,6 +43,7 @@ namespace structure{
         void destroyTree(Node node);
         void popNode(Node node);
         void overrideNode(Node oldNode, Node newNode);
+        std::random_device rd;
         std::default_random_engine generator;
         std::uniform_int_distribution<int> distribution;
     public:
