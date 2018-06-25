@@ -53,6 +53,7 @@ namespace structure{
         Node getRoot() const;
         Node insert(T& key);
         bool remove(T& key);
+        bool remove(Node node);
         Node find(T& key);
         Node minimum();
         Node maximum();

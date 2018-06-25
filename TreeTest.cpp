@@ -29,6 +29,12 @@ int main() {
     num = 4;
     tree1.remove(num);
     printNode(tree1.getRoot());
+    num = 5;
+    tree1.remove(num);
+    printNode(tree1.getRoot());
+    num = 6;
+    tree1.remove(num);
+    printNode(tree1.getRoot());
     node * node = tree1.minimum();
     while(node != nullptr){
         cout << node->getKey() << " ";

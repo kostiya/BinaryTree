@@ -114,8 +114,7 @@ namespace structure{
             return previous_node->left;
         }
     }
-    bool BinaryTree::remove(T& key){
-        Node node = this->find(key);
+    bool BinaryTree::remove(Node node){
         if(node == nullptr)
             return false;
 
@@ -150,6 +149,12 @@ namespace structure{
         return true;
 
     }
+
+    bool BinaryTree::remove(T& key){
+        Node node = find(key);
+        return remove(node);
+    }
+
     Node BinaryTree::find(T& key){
         Node current_node = this->getRoot();
         while (current_node != nullptr){
