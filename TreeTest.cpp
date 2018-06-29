@@ -38,7 +38,7 @@ int main() {
     node * node = tree1.minimum();
     while(node != nullptr){
         cout << node->getKey() << " ";
-        node = node->succsessor();
+        node = node->successor();
     }
     cout << endl;
     return 0;

@@ -186,7 +186,7 @@ namespace structure{
     Node BinaryTree::maximum(){
         this->getRoot()->maximum();
     }
-    Node node::succsessor(){
+    Node node::successor(){
         if(right != nullptr)
             return right->minimum();
         Node current = this;
@@ -207,13 +207,6 @@ namespace structure{
             parent = parent->p;
         }
         return parent;
-    }
-
-    bool node::rotateRight(){
-
-    }
-    bool node::rotateLeft(){
-
     }
 
     void printNode(Node node, int depth){

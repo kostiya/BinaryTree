@@ -31,10 +31,8 @@ namespace structure{
         const T& getKey() const;
         Node minimum();
         Node maximum();
-        Node succsessor();
+        Node successor();
         Node predecessor();
-        bool rotateRight();
-        bool rotateLeft();
     };
 
     class BinaryTree{
