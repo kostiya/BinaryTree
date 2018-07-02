@@ -13,10 +13,8 @@ namespace structure{
     Node::Node(T& key):Node(key, nullptr){isRoot=true;};
 
     Node::~Node() {
-        if(right != nullptr)
-            right->~Node();
-        if(left != nullptr)
-            left->~Node();
+        delete right;
+        delete left;
 
         if(p != nullptr){
             if(p->left==this)
