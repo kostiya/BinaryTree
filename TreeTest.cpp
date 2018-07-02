@@ -4,14 +4,13 @@
 #include "Tree.h"
 using std::cout;
 using std::endl;
-using structure::node;
-using structure::BinaryTree;
+using structure::Node;
 using structure::printNode;
 
 int main() {
     int num;
-    BinaryTree tree1;
     num = 4;
+    Node tree1(num);
     tree1.insert(num);
     num = 6;
     tree1.insert(num);
@@ -35,7 +34,7 @@ int main() {
     num = 6;
     tree1.remove(num);
     printNode(tree1.getRoot());
-    node * node = tree1.minimum();
+    Node * node = tree1.minimum();
     while(node != nullptr){
         cout << node->getKey() << " ";
         node = node->successor();

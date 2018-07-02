@@ -2,96 +2,128 @@
 
 
 namespace structure{
-    node::node(T& key,
-               Node p,
-               Node left,
-               Node right):key(key),
+    Node::Node(T& key,
+               Node* p,
+               Node* left,
+               Node* right):key(key),
                                      p(p),
                                      left(left),
-                                     right(right){}
+                                     right(right){};
 
-    BinaryTree::BinaryTree():rd(),
-                             generator(rd()),
-                             distribution(0,1){
-        root = nullptr;
-    }
-    BinaryTree::BinaryTree(T& key):BinaryTree(){
-        this->insert(key);
-    }
+    Node::Node(T& key):Node(key, nullptr){isRoot=true;};
 
-    void BinaryTree::destroyTree(Node node){
-        if(node == nullptr)
-            return;
-        this->destroyTree(node->left);
-        this->destroyTree(node->right);
-        delete node;
-    }
+    Node::~Node() {
+        if(right != nullptr)
+            right->~Node();
+        if(left != nullptr)
+            left->~Node();
 
-    void BinaryTree::popNode(Node node) {
-        Node sibling;
-        if(node->left == nullptr)
-            sibling = node->right;
-        else if(node->right == nullptr)
-            sibling = node->left;
+        if(p != nullptr){
+            if(p->left==this)
+                p->left= nullptr;
+            else
+                p->right= nullptr;
+        }
+    }
+    std::random_device Node::rd;
+    std::default_random_engine Node::generator(Node::rd());
+    std::uniform_int_distribution<int> Node::distribution(0,1);
+
+    Node* Node::popNode() {
+        Node* sibling;
+        if(left == nullptr)
+            sibling = right;
+        else if(right == nullptr)
+            sibling = left;
         else
-            return;
+            return nullptr;
 
-        if(node->p != nullptr) {
-            if (node->p->left == node)
-                node->p->left = sibling;
-            else
-                node->p->right = sibling;
+        if(!isRoot) {
+            if (p != nullptr) {
+                if (p->left == this)
+                    p->left = sibling;
+                else
+                    p->right = sibling;
+            }
+
+            if (sibling != nullptr)
+                sibling->p = p;
+
+            p = nullptr;
+            left = nullptr;
+            right = nullptr;
+            return this;
+        } else{
+            if(sibling==right){
+                T old_key(key);
+                key = right->key;
+                right->key = old_key;
+                left = right->left;
+                right->left = nullptr;
+                return right->popNode();
+            }else{
+                T old_key(key);
+                key = left->key;
+                left->key = old_key;
+                right = left->right;
+                left->right = nullptr;
+                return left->popNode();
+            }
         }
 
-        if(sibling != nullptr)
-            sibling->p = node->p;
-
     }
 
-    void BinaryTree::overrideNode(Node oldNode, Node newNode){
-        if(newNode == nullptr || oldNode == nullptr)
-            return;
-        newNode->left = oldNode->left;
-        newNode->right = oldNode->right;
-        newNode->p = oldNode->p;
-        if(oldNode->p != nullptr) {
-            if (oldNode->p->left == oldNode)
-                oldNode->p->left = newNode;
-            else
-                oldNode->p->right = newNode;
+    Node * Node::overrideWith(Node *newNode){
+        if(newNode == nullptr)
+            return nullptr;
+        if(isRoot){
+            key=newNode->key;
+            newNode->p= nullptr;
+            newNode->left= nullptr;
+            newNode->right= nullptr;
+            return newNode;
         }
-        if(oldNode->right != nullptr)
-            oldNode->right->p = newNode;
-        if(oldNode->left != nullptr)
-            oldNode->left->p = newNode;
+        newNode->left = left;
+        newNode->right = right;
+        newNode->p = p;
+        if(p != nullptr) {
+            if (p->left == this)
+                p->left = newNode;
+            else
+                p->right = newNode;
+        }
+        if(right != nullptr)
+            right->p = newNode;
+        if(left != nullptr)
+            left->p = newNode;
+
+        p= nullptr;
+        left= nullptr;
+        right= nullptr;
+        return this;
     }
 
-    BinaryTree::~BinaryTree() {
-        destroyTree(this->getRoot());
+    Node* Node::getRoot(){
+        Node* node = this;
+        while(node->p != nullptr)
+            node = node->p;
+        return node;
     }
-
-    Node BinaryTree::getRoot() const {
-        return this->root;
-    }
-    Node node::getParent() const{
+    Node* Node::getParent() const{
         return this->p;
     }
-    Node node::getLeft() const{
+    Node* Node::getLeft() const{
         return this->left;
     }
-    Node node::getRight() const{
+    Node* Node::getRight() const{
         return this->right;
     }
-    const T& node::getKey() const{
+    const T& Node::getKey() const{
         return this->key;
     }
-    Node BinaryTree::insert(T& key){
-        if(this->getRoot()== nullptr){
-            this->root = new node(key);
-            return this->getRoot();
-        }
-        Node current_node = this->getRoot();
-        Node previous_node = current_node;
+    Node* Node::insert(T& key){
+        Node* current_node = this->getRoot();
+        Node* previous_node = current_node;
         Location side = rightNode;
         while (current_node != nullptr){
             if(key==current_node->key)
@@ -107,56 +139,40 @@ namespace structure{
             }
         }
         if(side == rightNode){
-            previous_node->right = new node(key,previous_node);
+            previous_node->right = new Node(key,previous_node);
             return previous_node->right;
         } else{
-            previous_node->left = new node(key,previous_node);
+            previous_node->left = new Node(key,previous_node);
             return previous_node->left;
         }
     }
-    bool BinaryTree::remove(Node node){
-        if(node == nullptr)
-            return false;
+    bool Node::remove() {
 
-        if(node->left== nullptr){
-            if(node==root)
-                root = node->right;
-            this->popNode(node);
-            delete node;
+        if(left== nullptr || right == nullptr){
+            delete popNode();
             return true;
         }
 
-        if(node->right == nullptr){
-            if(node==root)
-                root = node->left;
-            this->popNode(node);
-            delete node;
-            return true;
-        }
-
-        Node newNode;
+        Node* newNode;
 
         if(distribution(generator)==0)
-            newNode = node->left->maximum();
+            newNode = left->maximum();
         else
-            newNode = node->right->minimum();
+            newNode = right->minimum();
 
-        popNode(newNode);
-        overrideNode(node,newNode);
-        if(root==node)
-            root = newNode;
-        delete node;
+        newNode = newNode->popNode();
+        delete overrideWith(newNode);
         return true;
 
     }
 
-    bool BinaryTree::remove(T& key){
-        Node node = find(key);
-        return remove(node);
+    bool Node::remove(T& key){
+        Node* node = find(key);
+        return node->remove();
     }
 
-    Node BinaryTree::find(T& key){
-        Node current_node = this->getRoot();
+    Node* Node::find(T& key){
+        Node* current_node = this->getRoot();
         while (current_node != nullptr){
             if(key==current_node->key)
                 return current_node;
@@ -168,40 +184,35 @@ namespace structure{
         }
         return nullptr;
     }
-    Node node::minimum(){
-        Node current_node = this;
+    Node* Node::minimum(){
+        Node* current_node = this;
         while(current_node->left != nullptr)
             current_node = current_node->left;
         return current_node;
     }
-    Node node::maximum(){
-        Node current_node = this;
+    Node* Node::maximum(){
+        Node* current_node = this;
         while(current_node->right != nullptr)
             current_node = current_node->right;
         return current_node;
     }
-    Node BinaryTree::minimum(){
-        this->getRoot()->minimum();
-    }
-    Node BinaryTree::maximum(){
-        this->getRoot()->maximum();
-    }
-    Node node::successor(){
+
+    Node* Node::successor(){
         if(right != nullptr)
             return right->minimum();
-        Node current = this;
-        Node parent = this->p;
+        Node* current = this;
+        Node* parent = this->p;
         while(parent != nullptr && current== parent->right){
             current = parent;
             parent = parent->p;
         }
         return parent;
     }
-    Node node::predecessor(){
+    Node* Node::predecessor(){
         if(left != nullptr)
             return left->maximum();
-        Node current = this;
-        Node parent = this->p;
+        Node* current = this;
+        Node* parent = p;
         while(parent != nullptr && current== parent->left){
             current = parent;
             parent = parent->p;
@@ -209,7 +220,7 @@ namespace structure{
         return parent;
     }
 
-    void printNode(Node node, int depth){
+    void printNode(Node* node, int depth){
         if(node == nullptr)
             return;
         printNode(node->getLeft() ,depth+1);

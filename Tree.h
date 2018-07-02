@@ -12,52 +12,43 @@ namespace structure{
     enum Location{leftNode, rightNode};
 
     typedef int T;
-    typedef class node *Node;
-    class node{
+    class Node{
         friend class BinaryTree;
     protected:
-        Node p;
-        Node left;
-        Node right;
+        Node* p;
+        Node* left;
+        Node* right;
         T key;
+        bool isRoot=false;
+
+        Node* popNode();
+        Node * overrideWith(Node *newNode);
+        static std::random_device rd;
+        static std::default_random_engine generator;
+        static std::uniform_int_distribution<int> distribution;
+        explicit  Node(T& key,
+                       Node* p,
+                       Node* left = nullptr,
+                       Node* right = nullptr);
     public:
-        explicit  node(T& key,
-                         Node p= nullptr,
-                         Node left = nullptr,
-                         Node right = nullptr);
-        Node getParent() const;
-        Node getLeft() const;
-        Node getRight() const;
+        explicit  Node(T& key);
+        ~Node();
+        Node* getParent() const;
+        Node* getLeft() const;
+        Node* getRight() const;
         const T& getKey() const;
-        Node minimum();
-        Node maximum();
-        Node successor();
-        Node predecessor();
-    };
-
-    class BinaryTree{
-    protected:
-        Node root;
-        void destroyTree(Node node);
-        void popNode(Node node);
-        void overrideNode(Node oldNode, Node newNode);
-        std::random_device rd;
-        std::default_random_engine generator;
-        std::uniform_int_distribution<int> distribution;
-    public:
-        explicit BinaryTree();
-        explicit BinaryTree(T& key);
-        ~BinaryTree();
-        Node getRoot() const;
-        Node insert(T& key);
+        Node* minimum();
+        Node* maximum();
+        Node* successor();
+        Node* predecessor();
+        Node* getRoot();
+        Node* insert(T& key);
         bool remove(T& key);
-        bool remove(Node node);
-        Node find(T& key);
-        Node minimum();
-        Node maximum();
+        bool remove();
+        Node* find(T& key);
     };
 
-    void printNode(Node node, int depth=0);
+    void printNode(Node* node, int depth=0);
 }
 
 #endif //BINARYTREE_TREE_H
