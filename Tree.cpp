@@ -2,7 +2,8 @@
 
 
 namespace structure{
-    Node::Node(T& key,
+    template <class T>
+    Node<T>::Node(T& key,
                Node* p,
                Node* left,
                Node* right):key(key),
@@ -10,9 +11,11 @@ namespace structure{
                                      left(left),
                                      right(right){};
 
-    Node::Node(T& key):Node(key, nullptr){isRoot=true;};
+    template <class T>
+    Node<T>::Node(T& key):Node(key, nullptr){isRoot=true;};
 
-    Node::~Node() {
+    template <class T>
+    Node<T>::~Node() {
         delete right;
         delete left;
 
@@ -23,11 +26,17 @@ namespace structure{
                 p->right= nullptr;
         }
     }
-    std::random_device Node::rd;
-    std::default_random_engine Node::generator(Node::rd());
-    std::uniform_int_distribution<int> Node::distribution(0,1);
+    template <class T>
+    std::random_device Node<T>::rd;
 
-    Node* Node::popNode() {
+    template <class T>
+    std::default_random_engine Node<T>::generator(Node<T>::rd());
+
+    template <class T>
+    std::uniform_int_distribution<int> Node<T>::distribution(0,1);
+
+    template <class T>
+    Node<T>* Node<T>::popNode() {
         Node* sibling;
         if(left == nullptr)
             sibling = right;
@@ -71,7 +80,8 @@ namespace structure{
 
     }
 
-    Node * Node::overrideWith(Node *newNode){
+    template <class T>
+    Node<T> * Node<T>::overrideWith(Node *newNode){
         if(newNode == nullptr)
             return nullptr;
         if(isRoot){
@@ -101,25 +111,31 @@ namespace structure{
         return this;
     }
 
-    Node* Node::getRoot(){
+    template <class T>
+    Node<T>* Node<T>::getRoot(){
         Node* node = this;
         while(node->p != nullptr)
             node = node->p;
         return node;
     }
-    Node* Node::getParent() const{
+    template <class T>
+    Node<T>* Node<T>::getParent() const{
         return this->p;
     }
-    Node* Node::getLeft() const{
+    template <class T>
+    Node<T>* Node<T>::getLeft() const{
         return this->left;
     }
-    Node* Node::getRight() const{
+    template <class T>
+    Node<T>* Node<T>::getRight() const{
         return this->right;
     }
-    const T& Node::getKey() const{
+    template <class T>
+    const T& Node<T>::getKey() const{
         return this->key;
     }
-    Node* Node::insert(T& key){
+    template <class T>
+    Node<T>* Node<T>::insert(T& key){
         Node* current_node = this->getRoot();
         Node* previous_node = current_node;
         Location side = rightNode;
@@ -144,7 +160,8 @@ namespace structure{
             return previous_node->left;
         }
     }
-    bool Node::remove() {
+    template <class T>
+    bool Node<T>::remove() {
 
         if(left== nullptr || right == nullptr){
             delete popNode();
@@ -164,12 +181,14 @@ namespace structure{
 
     }
 
-    bool Node::remove(T& key){
+    template <class T>
+    bool Node<T>::remove(T& key){
         Node* node = find(key);
         return node->remove();
     }
 
-    Node* Node::find(T& key){
+    template <class T>
+    Node<T>* Node<T>::find(T& key){
         Node* current_node = this->getRoot();
         while (current_node != nullptr){
             if(key==current_node->key)
@@ -182,20 +201,23 @@ namespace structure{
         }
         return nullptr;
     }
-    Node* Node::minimum(){
+    template <class T>
+    Node<T>* Node<T>::minimum(){
         Node* current_node = this;
         while(current_node->left != nullptr)
             current_node = current_node->left;
         return current_node;
     }
-    Node* Node::maximum(){
+    template <class T>
+    Node<T>* Node<T>::maximum(){
         Node* current_node = this;
         while(current_node->right != nullptr)
             current_node = current_node->right;
         return current_node;
     }
 
-    Node* Node::successor(){
+    template <class T>
+    Node<T>* Node<T>::successor(){
         if(right != nullptr)
             return right->minimum();
         Node* current = this;
@@ -206,7 +228,8 @@ namespace structure{
         }
         return parent;
     }
-    Node* Node::predecessor(){
+    template <class T>
+    Node<T>* Node<T>::predecessor(){
         if(left != nullptr)
             return left->maximum();
         Node* current = this;
@@ -218,7 +241,8 @@ namespace structure{
         return parent;
     }
 
-    void printNode(Node* node, int depth){
+
+    void printNode(Node<int>* node, int depth){
         if(node == nullptr)
             return;
         printNode(node->getLeft() ,depth+1);
@@ -229,4 +253,6 @@ namespace structure{
         if(depth==0)
             cout << "--------------------" << endl;
     }
+
+    template class Node<int>;
 }

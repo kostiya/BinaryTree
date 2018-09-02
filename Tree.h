@@ -8,21 +8,20 @@
 using std::cout;
 using std::endl;
 namespace structure{
-    //template <class T>
     enum Location{leftNode, rightNode};
 
-    typedef int T;
+    template <class T>
     class Node{
         friend class BinaryTree;
     protected:
-        Node* p;
-        Node* left;
-        Node* right;
+        Node<T>* p;
+        Node<T>* left;
+        Node<T>* right;
         T key;
         bool isRoot=false;
 
-        Node* popNode();
-        Node * overrideWith(Node *newNode);
+        Node<T>* popNode();
+        Node<T>* overrideWith(Node *newNode);
         static std::random_device rd;
         static std::default_random_engine generator;
         static std::uniform_int_distribution<int> distribution;
@@ -33,22 +32,22 @@ namespace structure{
     public:
         explicit  Node(T& key);
         ~Node();
-        Node* getParent() const;
-        Node* getLeft() const;
-        Node* getRight() const;
+        Node<T>* getParent() const;
+        Node<T>* getLeft() const;
+        Node<T>* getRight() const;
         const T& getKey() const;
-        Node* minimum();
-        Node* maximum();
-        Node* successor();
-        Node* predecessor();
-        Node* getRoot();
-        Node* insert(T& key);
+        Node<T>* minimum();
+        Node<T>* maximum();
+        Node<T>* successor();
+        Node<T>* predecessor();
+        Node<T>* getRoot();
+        Node<T>* insert(T& key);
         bool remove(T& key);
         bool remove();
-        Node* find(T& key);
+        Node<T>* find(T& key);
     };
 
-    void printNode(Node* node, int depth=0);
+    void printNode(Node<int>* node, int depth=0);
 }
 
 #endif //BINARYTREE_TREE_H

@@ -10,7 +10,7 @@ using structure::printNode;
 int main() {
     int num;
     num = 4;
-    Node tree1(num);
+    Node<int> tree1(num);
     tree1.insert(num);
     num = 6;
     tree1.insert(num);
@@ -34,7 +34,7 @@ int main() {
     num = 6;
     tree1.remove(num);
     printNode(tree1.getRoot());
-    Node * node = tree1.minimum();
+    Node<int>* node = tree1.minimum();
     while(node != nullptr){
         cout << node->getKey() << " ";
         node = node->successor();
